@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { useScrollReveal } from '../../hooks/useScrollReveal'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const FAQS = [
   { q:'What stack do you specialise in?',     a:"My primary stack is PERN — PostgreSQL, Express.js, React.js, and Node.js — plus strong command of HTML/CSS and working knowledge of Python, C++, and Java." },

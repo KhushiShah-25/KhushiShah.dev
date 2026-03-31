@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
-import HeroScene from '../../three/HeroScene'
+import HeroScene from '../three/HeroScene'
 
 const STACK_CORE = ['HTML', 'CSS', 'JavaScript', 'React.js', 'Node.js', 'Express.js', 'PostgreSQL']
 const STACK_SEC  = ['Python', 'C++ / DSA', 'Java']

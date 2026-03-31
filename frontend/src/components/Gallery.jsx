@@ -1,6 +1,6 @@
 import { Suspense, useRef } from 'react'
-import { useScrollReveal } from '../../hooks/useScrollReveal'
-import PhotoCarousel from '../../three/PhotoCarousel'
+import { useScrollReveal } from '../hooks/useScrollReveal'
+import PhotoCarousel from '../three/PhotoCarousel'
 
 export default function Gallery() {
   const ref = useRef(null)

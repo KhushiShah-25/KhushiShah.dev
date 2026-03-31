@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { useScrollReveal } from '../../hooks/useScrollReveal'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const BUILD_STEPS = [
   {

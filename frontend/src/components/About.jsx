@@ -1,6 +1,6 @@
 // About.jsx
 import { useRef } from 'react'
-import { useScrollReveal } from '../../hooks/useScrollReveal'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 export default function About() {
   const ref = useRef(null)

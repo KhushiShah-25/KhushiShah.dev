@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { useScrollReveal } from '../../hooks/useScrollReveal'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const FALLBACK = [
   { id:1, title:'E-Commerce Platform',   description:'Full-stack e-commerce app with product listings, cart, authentication, and PostgreSQL backend.', category:'Full Stack', stack:['React','Node.js','Express','PostgreSQL'], emoji:'🛒' },

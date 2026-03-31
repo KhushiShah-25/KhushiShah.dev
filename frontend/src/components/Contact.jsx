@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { useScrollReveal } from '../../hooks/useScrollReveal'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 export default function Contact() {
   const ref = useRef(null)

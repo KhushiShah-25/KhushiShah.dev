@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { useScrollReveal } from '../../hooks/useScrollReveal'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const FALLBACK = [
   { id:1, initials:'RS', name:'Rahul Sharma',  role:'// Project Mentor, Bennett University', rating:5, body:'Khushi has an incredible eye for detail and a strong grasp of both frontend and backend technologies. She delivered clean, well-structured code every time.' },
