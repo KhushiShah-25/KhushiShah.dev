@@ -2,10 +2,10 @@ import { useRef, useState, useEffect } from 'react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const FALLBACK = [
-  { id:1, title:'E-Commerce Platform',   description:'Full-stack e-commerce app with product listings, cart, authentication, and PostgreSQL backend.', category:'Full Stack', stack:['React','Node.js','Express','PostgreSQL'], emoji:'🛒' },
-  { id:2, title:'Task Management App',    description:'Kanban-style productivity app with drag-and-drop, built in React with local storage persistence.', category:'Frontend',    stack:['React.js','CSS','JavaScript'], emoji:'📋' },
-  { id:3, title:'Auth REST API',          description:'Secure auth system using Node.js + Express with JWT tokens and PostgreSQL user management.', category:'Backend',     stack:['Node.js','Express.js','JWT','PostgreSQL'], emoji:'🔐' },
-  { id:4, title:'DSA Visualizer',         description:'Interactive visualizer for data structures and sorting algorithms built while learning C++ DSA.', category:'Algorithm',   stack:['JavaScript','HTML','CSS','C++'], emoji:'📊' },
+  { id: 1, title: 'E-Commerce Platform', description: 'Full-stack e-commerce app with product listings, cart, authentication, and PostgreSQL backend.', category: 'Full Stack', stack: ['React', 'Node.js', 'Express', 'PostgreSQL'], emoji: '🛒' },
+  { id: 2, title: 'Task Management App', description: 'Kanban-style productivity app with drag-and-drop, built in React with local storage persistence.', category: 'Frontend', stack: ['React.js', 'CSS', 'JavaScript'], emoji: '📋' },
+  { id: 3, title: 'Auth REST API', description: 'Secure auth system using Node.js + Express with JWT tokens and PostgreSQL user management.', category: 'Backend', stack: ['Node.js', 'Express.js', 'JWT', 'PostgreSQL'], emoji: '🔐' },
+  { id: 4, title: 'DSA Visualizer', description: 'Interactive visualizer for data structures and sorting algorithms built while learning C++ DSA.', category: 'Algorithm', stack: ['JavaScript', 'HTML', 'CSS', 'C++'], emoji: '📊' },
 ]
 
 export default function Projects() {
@@ -17,7 +17,7 @@ export default function Projects() {
     fetch('/api/projects?featured=true')
       .then(r => r.json())
       .then(data => { if (Array.isArray(data) && data.length) setProjects(data) })
-      .catch(() => {/* use fallback */})
+      .catch(() => {/* use fallback */ })
   }, [])
 
   return (
@@ -27,7 +27,7 @@ export default function Projects() {
           <div className="section-label">// projects.filter(featured)</div>
           <h2 className="section-title">Featured<br /><em>Projects</em></h2>
         </div>
-        <p className="section-desc" style={{ maxWidth:340 }}>
+        <p className="section-desc" style={{ maxWidth: 340 }}>
           Builds that showcase full-stack skills, problem solving, and design sensibility.
         </p>
       </div>
@@ -35,7 +35,7 @@ export default function Projects() {
       <div className={"Projects-grid"}>
         {projects.map((p, i) => (
           <a key={p.id} href={p.live_url || '#'} className={"Projects-card"} data-reveal>
-            <div className={`${"Projects-img"} ${styles[`bg${(i%4)+1}`]}`}>
+            <div className={`Projects-img Projects-bg${(i % 4) + 1}`}>
               <span className={"Projects-imgIcon"}>{p.emoji}</span>
               <div className={"Projects-overlay"}>
                 <span className={"Projects-viewBtn"}>View Project</span>
@@ -53,7 +53,7 @@ export default function Projects() {
         ))}
       </div>
 
-      <div style={{ textAlign:'center', marginTop:44 }} data-reveal>
+      <div style={{ textAlign: 'center', marginTop: 44 }} data-reveal>
         <a href="#" className="btn-outline">Browse All Projects →</a>
       </div>
     </section>
