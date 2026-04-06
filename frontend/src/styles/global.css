@@ -27,7 +27,6 @@
   --shadow: rgba(0, 0, 0, 0.60);
 }
 
-/* ── ELEGANT LIGHT THEME ── */
 [data-theme="light"] {
   --bg: #f9f8ff;
   --bg2: #efe9ff;
@@ -69,13 +68,13 @@ body {
   font-size: 16px;
   line-height: 1.6;
   overflow-x: hidden;
-  cursor: none;
   transition: background 0.4s, color 0.4s;
 }
 
-@media (max-width: 900px) {
+/* Custom cursor only on non-touch devices */
+@media (hover: hover) and (pointer: fine) {
   body {
-    cursor: auto;
+    cursor: none;
   }
 }
 
@@ -233,11 +232,9 @@ section {
   padding: 96px 60px;
 }
 
-/* ════════════════════════════════════════
-   COMPONENT STYLES
-════════════════════════════════════════ */
-
-/* ── CURSOR ── */
+/* ════════════════════════════
+   CURSOR — fixed + pointer-events none
+════════════════════════════ */
 .Cursor-dot {
   position: fixed;
   width: 10px;
@@ -245,12 +242,14 @@ section {
   background: var(--accent);
   border-radius: 50%;
   pointer-events: none;
-  z-index: 99999;
+  z-index: 999999;
   transform: translate(-50%, -50%);
-  transition: transform 0.12s, background 0.2s, opacity 0.3s;
+  top: -20px;
+  left: -20px;
   mix-blend-mode: screen;
   opacity: 0;
-  /* hidden until mouse moves — JS sets opacity: 1 */
+  transition: opacity 0.3s, transform 0.12s, background 0.2s;
+  will-change: left, top;
 }
 
 .Cursor-ring {
@@ -260,17 +259,21 @@ section {
   border: 1.5px solid rgba(124, 109, 250, 0.4);
   border-radius: 50%;
   pointer-events: none;
-  z-index: 99998;
+  z-index: 999998;
   transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, opacity 0.3s;
+  top: -20px;
+  left: -20px;
   opacity: 0;
+  transition: width 0.3s, height 0.3s, opacity 0.3s;
+  will-change: left, top;
 }
 
-@media (max-width: 900px) {
+/* Only show cursor on devices with hover support */
+@media (hover: none) or (pointer: coarse) {
 
   .Cursor-dot,
   .Cursor-ring {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -280,19 +283,21 @@ section {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 60px;
   background: var(--nav-bg);
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--border);
-  transition: background 0.4s, border-color 0.4s, backdrop-filter 0.3s;
+  transition: background 0.4s, border-color 0.4s;
 }
 
 .Navbar-scrolled {
   backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
 .Navbar-logo {
@@ -433,7 +438,7 @@ section {
   padding: 20px 24px 28px;
   transform: translateY(-110%);
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 99;
+  z-index: 999;
 }
 
 .Navbar-drawerOpen {
@@ -474,9 +479,7 @@ section {
   text-decoration: none;
 }
 
-/* ── HERO ──
-   CRITICAL: overflow must NOT be hidden — it kills the 3D transform context
-   Use overflow-x:hidden only to prevent horizontal scroll from chips     */
+/* ── HERO ── */
 .Hero-hero {
   min-height: 100vh;
   display: grid;
@@ -484,7 +487,6 @@ section {
   padding-top: 80px;
   position: relative;
   overflow-x: hidden;
-  /* only horizontal — preserves 3D z-axis */
 }
 
 .Hero-hero::before {
@@ -655,7 +657,6 @@ section {
   margin-top: 4px;
 }
 
-/* 3D photo — perspective container must NOT have overflow:hidden */
 .Hero-right {
   position: relative;
   display: flex;
@@ -752,7 +753,7 @@ section {
 /* ── GALLERY ── */
 .Gallery-gallery {
   background: var(--bg2);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .Gallery-header {
@@ -1866,15 +1867,14 @@ section {
   transform: rotate(20deg) scale(1.1);
 }
 
-/* ════════════════════════════════════════
-   RESPONSIVE — TABLET  (≤ 900px)
-════════════════════════════════════════ */
+/* ════════════════════════════════
+   RESPONSIVE — TABLET  ≤ 900px
+════════════════════════════════ */
 @media (max-width: 900px) {
   section {
     padding: 64px 24px;
   }
 
-  /* Navbar */
   .Navbar-nav {
     padding: 14px 20px;
   }
@@ -1889,7 +1889,6 @@ section {
     display: flex;
   }
 
-  /* Hero */
   .Hero-hero {
     grid-template-columns: 1fr;
   }
@@ -1911,7 +1910,10 @@ section {
     font-size: 24px;
   }
 
-  /* Skills */
+  .Gallery-gallery {
+    overflow: visible;
+  }
+
   .Skills-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -1932,7 +1934,6 @@ section {
     border-radius: 0 0 18px 0;
   }
 
-  /* About */
   .About-section {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -1942,17 +1943,14 @@ section {
     height: 300px;
   }
 
-  /* Projects */
   .Projects-grid {
     grid-template-columns: 1fr;
   }
 
-  /* Testimonials */
   .Testimonials-layout {
     grid-template-columns: 1fr;
   }
 
-  /* FAQ */
   .FAQ-layout {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -1962,7 +1960,6 @@ section {
     position: static;
   }
 
-  /* Blog */
   .Blog-timeline::before {
     left: 20px;
   }
@@ -1971,7 +1968,6 @@ section {
     grid-template-columns: 1fr;
   }
 
-  /* Contact */
   .Contact-section {
     grid-template-columns: 1fr;
     gap: 48px;
@@ -1981,7 +1977,6 @@ section {
     grid-template-columns: 1fr;
   }
 
-  /* Footer */
   .Footer-footer {
     padding: 20px 24px;
     flex-direction: column;
@@ -1994,22 +1989,20 @@ section {
     gap: 16px;
   }
 
-  /* Theme toggle */
   .ThemeToggle-btn {
     bottom: 20px;
     right: 20px;
   }
 }
 
-/* ════════════════════════════════════════
-   RESPONSIVE — MOBILE  (≤ 600px)
-════════════════════════════════════════ */
+/* ════════════════════════════════
+   RESPONSIVE — MOBILE  ≤ 600px
+════════════════════════════════ */
 @media (max-width: 600px) {
   section {
     padding: 52px 16px;
   }
 
-  /* Section typography */
   .section-title {
     font-size: clamp(24px, 8vw, 34px);
   }
@@ -2018,7 +2011,6 @@ section {
     font-size: 14px;
   }
 
-  /* Navbar */
   .Navbar-nav {
     padding: 12px 16px;
   }
@@ -2035,7 +2027,6 @@ section {
     font-size: 15px;
   }
 
-  /* Hero */
   .Hero-left {
     padding: 64px 16px 100px;
   }
@@ -2091,12 +2082,10 @@ section {
     font-size: 8px;
   }
 
-  /* Gallery carousel controls */
   .Gallery-header {
     margin-bottom: 32px;
   }
 
-  /* Skills — 1 column on very small screens */
   .Skills-grid {
     grid-template-columns: 1fr;
     gap: 2px;
@@ -2104,6 +2093,7 @@ section {
 
   .Skills-card {
     border-radius: 0 !important;
+    padding: 24px 20px;
   }
 
   .Skills-card:first-child {
@@ -2114,11 +2104,6 @@ section {
     border-radius: 0 0 18px 18px !important;
   }
 
-  .Skills-card {
-    padding: 24px 20px;
-  }
-
-  /* About */
   .About-imgCol {
     height: 220px;
   }
@@ -2140,7 +2125,6 @@ section {
     padding: 14px 16px;
   }
 
-  /* Projects */
   .Projects-header {
     flex-direction: column;
     align-items: flex-start;
@@ -2168,7 +2152,6 @@ section {
     font-size: 16px;
   }
 
-  /* Testimonials */
   .Testimonials-statNum {
     font-size: 38px;
   }
@@ -2177,7 +2160,6 @@ section {
     padding: 20px;
   }
 
-  /* FAQ */
   .FAQ-ctaBox {
     padding: 28px 20px;
   }
@@ -2186,7 +2168,6 @@ section {
     font-size: 22px;
   }
 
-  /* Blog */
   .Blog-step {
     gap: 18px;
   }
@@ -2213,14 +2194,12 @@ section {
     font-size: 16px;
   }
 
-  /* Contact */
   .Contact-submit {
     width: 100%;
     text-align: center;
     align-self: stretch;
   }
 
-  /* Footer */
   .Footer-footer {
     padding: 16px;
   }
@@ -2233,13 +2212,11 @@ section {
     font-size: 10px;
   }
 
-  /* Loader */
   .Loader-eyebrow {
     font-size: 9px;
     letter-spacing: 0.15em;
   }
 
-  /* Theme toggle */
   .ThemeToggle-btn {
     width: 42px;
     height: 42px;
@@ -2249,9 +2226,9 @@ section {
   }
 }
 
-/* ════════════════════════════════════════
-   RESPONSIVE — TINY  (≤ 380px)
-════════════════════════════════════════ */
+/* ════════════════════════════════
+   RESPONSIVE — TINY  ≤ 380px
+════════════════════════════════ */
 @media (max-width: 380px) {
   section {
     padding: 44px 12px;
