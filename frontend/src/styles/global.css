@@ -233,43 +233,51 @@ section {
 }
 
 /* ════════════════════════════
-   CURSOR — fixed + pointer-events none
+   CURSOR — transform-based, no top/left jank
 ════════════════════════════ */
 .Cursor-dot {
+  /* Anchor at top-left, JS moves via transform: translate(x, y) */
   position: fixed;
+  top: 0;
+  left: 0;
   width: 10px;
   height: 10px;
   background: var(--accent);
   border-radius: 50%;
   pointer-events: none;
   z-index: 999999;
-  transform: translate(-50%, -50%);
-  top: -20px;
-  left: -20px;
+  /* offset by half size so the hotspot is the element's center */
+  transform: translate(-200px, -200px);
+  margin-left: -5px;
+  margin-top: -5px;
   mix-blend-mode: screen;
   opacity: 0;
-  transition: opacity 0.3s, transform 0.12s, background 0.2s;
-  will-change: left, top;
+  transition: opacity 0.3s;
+  will-change: transform;
 }
 
 .Cursor-ring {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 36px;
   height: 36px;
-  border: 1.5px solid rgba(124, 109, 250, 0.4);
+  border: 1.5px solid rgba(124, 109, 250, 0.55);
   border-radius: 50%;
   pointer-events: none;
   z-index: 999998;
-  transform: translate(-50%, -50%);
-  top: -20px;
-  left: -20px;
+  transform: translate(-200px, -200px);
+  /* offset by half size so the ring is centered on the same point */
+  margin-left: -18px;
+  margin-top: -18px;
   opacity: 0;
-  transition: width 0.3s, height 0.3s, opacity 0.3s;
-  will-change: left, top;
+  transition: opacity 0.3s;
+  will-change: transform;
 }
 
 /* Only show cursor on devices with hover support */
-@media (hover: none) or (pointer: coarse) {
+@media (hover: none),
+(pointer: coarse) {
 
   .Cursor-dot,
   .Cursor-ring {

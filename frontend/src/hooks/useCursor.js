@@ -9,47 +9,50 @@ export function useCursor() {
     const ring = ringRef.current
     if (!dot || !ring) return
 
-    // Only run on pointer-capable devices
-    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
-    if (!mq.matches) return
+    // Only activate on real pointer devices (not touch screens)
+    const isPointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    if (!isPointer) return
 
-    let mx = -100, my = -100
-    let rx = -100, ry = -100
+    let mouseX = -200
+    let mouseY = -200
+    let ringX = -200
+    let ringY = -200
     let raf
-    let visible = false
+    let revealed = false
 
-    const onMove = (e) => {
-      mx = e.clientX
-      my = e.clientY
-      // Position dot immediately (no lag)
-      dot.style.left = mx + 'px'
-      dot.style.top = my + 'px'
+    // Move dot instantly to cursor position — no lag at all
+    const onMouseMove = (e) => {
+      mouseX = e.clientX
+      mouseY = e.clientY
+      // Use transform: translate so element stays at top:0 left:0 in CSS
+      dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`
 
-      if (!visible) {
-        visible = true
+      if (!revealed) {
+        revealed = true
         dot.style.opacity = '1'
         ring.style.opacity = '1'
       }
     }
 
-    const loop = () => {
-      // Lerp ring toward cursor
-      rx += (mx - rx) * 0.14
-      ry += (my - ry) * 0.14
-      ring.style.left = rx + 'px'
-      ring.style.top = ry + 'px'
-      raf = requestAnimationFrame(loop)
+    // Ring chases at a fixed lerp speed every frame
+    const LERP = 0.12  // lower = slower/lazier chase
+
+    const animate = () => {
+      ringX += (mouseX - ringX) * LERP
+      ringY += (mouseY - ringY) * LERP
+      ring.style.transform = `translate(${ringX}px, ${ringY}px)`
+      raf = requestAnimationFrame(animate)
     }
 
-    // Start hidden until first move
+    // Start invisible until mouse enters
     dot.style.opacity = '0'
     ring.style.opacity = '0'
 
-    document.addEventListener('mousemove', onMove, { passive: true })
-    raf = requestAnimationFrame(loop)
+    document.addEventListener('mousemove', onMouseMove, { passive: true })
+    raf = requestAnimationFrame(animate)
 
     return () => {
-      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mousemove', onMouseMove)
       cancelAnimationFrame(raf)
     }
   }, [])
