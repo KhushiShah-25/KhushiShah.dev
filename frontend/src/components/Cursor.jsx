@@ -1,39 +1,33 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 
-// All elements that trigger the grow effect
+// Selectors that trigger the grow effect
 const HOVER_TARGETS = [
   'a', 'button',
   '.dest-card', '.test-card', '.why-card',
-  '.g-tag', '.ThemeToggle-btn',
+  '.g-tag', '.ThemeToggle-btn', '.theme-toggle-btn',
   '.travel-card', '.g-img-v',
+  '.service-card', '.about-preview-card',
+  '.deck-card', '.w-card',
+  '.g-masonry-img', '.gp-card', '.gp-tab',
   '.Skills-card', '.About-imgCol',
   '.Projects-card', '.Testimonials-card',
   '.FAQ-item', '.Blog-step',
   '.Contact-social', '.Navbar-cta',
-  '.PhotoCarousel-card', '.PhotoCarousel-arrowBtn',
+  '.PhotoCarousel-card', '.PhotoCarousel-arrowBtn'
 ].join(', ')
 
 export default function Cursor() {
   const dotRef = useRef(null)
   const ringRef = useRef(null)
-  const [isMobile, setIsMobile] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth <= 768
-  )
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768)
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768)
     window.addEventListener('resize', handleResize)
-
-    // ── Skip everything on mobile / touch devices ──────────────────
+    
+    // ── Skip everything on mobile ───────────────────────────────────────────
     if (isMobile) {
-      window.removeEventListener('resize', handleResize)
-      return
-    }
-
-    // Also skip if device doesn't support fine pointer (touch screens)
-    const isPointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
-    if (!isPointer) {
       window.removeEventListener('resize', handleResize)
       return
     }
@@ -42,7 +36,7 @@ export default function Cursor() {
     const ring = ringRef.current
     if (!dot || !ring) return
 
-    // ── State ──────────────────────────────────────────────────────
+    // ── State ──────────────────────────────────────────────────────────────
     let mX = -200, mY = -200
     let rX = -200, rY = -200
     let rafId
@@ -50,7 +44,7 @@ export default function Cursor() {
 
     gsap.set([dot, ring], { autoAlpha: 0 })
 
-    // ── Snappy follow for dot ──────────────────────────────────────
+    // ── Snappy follow for dot ──────────────────────────────────────────────
     const onMove = ({ clientX, clientY }) => {
       mX = clientX
       mY = clientY
@@ -61,7 +55,7 @@ export default function Cursor() {
       gsap.to(dot, { x: mX, y: mY, duration: 0.08, ease: 'power2.out' })
     }
 
-    // ── Smooth lag for ring ────────────────────────────────────────
+    // ── Smooth lag for ring ───────────────────────────────────────────────
     const tickRing = () => {
       rX += (mX - rX) * 0.1
       rY += (mY - rY) * 0.1
@@ -73,7 +67,6 @@ export default function Cursor() {
     const hide = () => visible && gsap.to([dot, ring], { autoAlpha: 0, duration: 0.2 })
     const show = () => visible && gsap.to([dot, ring], { autoAlpha: 1, duration: 0.2 })
 
-    // ── Grow / shrink on hover ─────────────────────────────────────
     const grow = () => {
       gsap.to(ring, { width: 54, height: 54, duration: 0.28, ease: 'power2.out' })
       gsap.to(dot, { scale: 0.35, duration: 0.28, ease: 'power2.out' })
@@ -83,7 +76,6 @@ export default function Cursor() {
       gsap.to(dot, { scale: 1, duration: 0.28, ease: 'power2.out' })
     }
 
-    // Attach hover listeners lazily as new elements appear in DOM
     const attached = new WeakSet()
     const attachHovers = () => {
       document.querySelectorAll(HOVER_TARGETS).forEach(el => {
@@ -112,44 +104,26 @@ export default function Cursor() {
     }
   }, [isMobile])
 
-  // Render nothing at all on mobile — no DOM nodes, no overhead
   if (isMobile) return null
 
   return (
     <>
       <div
         ref={dotRef}
-        className="Cursor-dot"
+        className="custom-dot"
         style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: 10,
-          height: 10,
-          background: 'var(--accent)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 999999,
-          marginLeft: -5,
-          marginTop: -5,
-          mixBlendMode: 'screen',
-          willChange: 'transform',
+          width: 8, height: 8, background: 'var(--accent)', borderRadius: '50%',
+          position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 999999,
+          marginLeft: -4, marginTop: -4, willChange: 'transform',
         }}
       />
       <div
         ref={ringRef}
-        className="Cursor-ring"
+        className="custom-ring"
         style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: 36,
-          height: 36,
-          border: '1.5px solid rgba(124, 109, 250, 0.55)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 999998,
-          willChange: 'transform',
+          width: 36, height: 36, border: '1.5px solid var(--accent)', borderRadius: '50%',
+          position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 999998,
+          transition: 'width 0.28s ease, height 0.28s ease', willChange: 'transform',
         }}
       />
     </>

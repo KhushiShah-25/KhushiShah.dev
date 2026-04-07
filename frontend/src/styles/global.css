@@ -233,54 +233,12 @@ section {
 }
 
 /* ════════════════════════════
-   CURSOR — transform-based, no top/left jank
+   CURSOR
 ════════════════════════════ */
-.Cursor-dot {
-  /* Anchor at top-left, JS moves via transform: translate(x, y) */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  background: var(--accent);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 999999;
-  /* offset by half size so the hotspot is the element's center */
-  transform: translate(-200px, -200px);
-  margin-left: -5px;
-  margin-top: -5px;
-  mix-blend-mode: screen;
-  opacity: 0;
-  transition: opacity 0.3s;
-  will-change: transform;
-}
-
-.Cursor-ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 36px;
-  height: 36px;
-  border: 1.5px solid rgba(124, 109, 250, 0.55);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 999998;
-  transform: translate(-200px, -200px);
-  /* offset by half size so the ring is centered on the same point */
-  margin-left: -18px;
-  margin-top: -18px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  will-change: transform;
-}
-
-/* Only show cursor on devices with hover support */
-@media (hover: none),
-(pointer: coarse) {
-
-  .Cursor-dot,
-  .Cursor-ring {
+/* Only show custom cursor on devices with hover support */
+@media (hover: none), (pointer: coarse) {
+  .custom-dot,
+  .custom-ring {
     display: none !important;
   }
 }
@@ -663,6 +621,52 @@ section {
   text-transform: uppercase;
   color: var(--muted);
   margin-top: 4px;
+}
+
+.Hero-scroll {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+  padding-bottom: 30px;
+}
+
+.Hero-scrollText {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--muted);
+}
+
+.Hero-scrollLine {
+  width: 1px;
+  height: 40px;
+  background: var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.Hero-scrollLine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: var(--accent);
+  animation: scrollDrop 1.5s infinite;
+}
+
+@keyframes scrollDrop {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
 }
 
 .Hero-right {
@@ -1643,14 +1647,21 @@ section {
   /* ── Hero ── */
   .Hero-hero {
     grid-template-columns: 1fr;
+    padding-bottom: 24px;
   }
 
   .Hero-left {
-    padding: 72px 24px 56px;
+    padding: 72px 24px 24px;
   }
 
   .Hero-right {
-    display: none;
+    display: flex;
+    padding-bottom: 100px;
+  }
+
+  .Hero-tiltWrap {
+    transform: scale(0.8);
+    transform-origin: center top;
   }
 
   .Hero-stats {
@@ -1804,7 +1815,11 @@ section {
 
   /* ── Hero ── */
   .Hero-left {
-    padding: 64px 16px 100px;
+    padding: 64px 16px 20px;
+  }
+
+  .Hero-tiltWrap {
+    transform: scale(0.7);
   }
 
   .Hero-badge {
@@ -2042,7 +2057,7 @@ section {
   }
 
   .Hero-left {
-    padding: 60px 12px 90px;
+    padding: 60px 12px 10px;
   }
 
   .Hero-actions {

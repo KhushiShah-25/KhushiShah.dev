@@ -106,6 +106,12 @@ export default function Hero() {
         </div>
       </div>
 
+      {/* Scroll indicator */}
+      <div className="Hero-scroll">
+        <span className="Hero-scrollText">Scroll to discover</span>
+        <div className="Hero-scrollLine" />
+      </div>
+
       {/* Stats */}
       <div className={"Hero-stats"}>
         {[['7+','Tech Skills'],['10+','Projects'],['3','Languages']].map(([n,l]) => (
