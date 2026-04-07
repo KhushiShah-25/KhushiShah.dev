@@ -8,7 +8,11 @@ export default function About() {
   return (
     <section id="about" className="About-section" ref={ref}>
       <div className="About-imgCol" data-reveal>
-        <div className="About-initials">KS</div>
+        <img
+          src="https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600966/e96e9ba2-bc89-4a78-b667-cc75727b771c_npgrkb.jpg"
+          alt="Khushi Shah"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
         <div className="About-tag">
           <div className="About-dot" />
           <div>

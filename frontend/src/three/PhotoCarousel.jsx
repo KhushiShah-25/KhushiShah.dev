@@ -1,22 +1,18 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 
-const PHOTOS = Array.from({ length: 10 }, (_, i) => ({
-  id: i,
-  label: `Moment ${String(i + 1).padStart(2, '0')}`,
-  tag: `// photo_${String(i + 1).padStart(2, '0')}.jpg`,
-  gradient: [
-    'linear-gradient(135deg, #1a1230 0%, #2d1f5e 100%)',
-    'linear-gradient(135deg, #120a1a 0%, #3d1254 100%)',
-    'linear-gradient(135deg, #0a1420 0%, #1a3a6e 100%)',
-    'linear-gradient(135deg, #1a120a 0%, #4a2e0a 100%)',
-    'linear-gradient(135deg, #0a1a14 0%, #0a3d2a 100%)',
-    'linear-gradient(135deg, #1a0a14 0%, #4a0a2a 100%)',
-    'linear-gradient(135deg, #101420 0%, #203060 100%)',
-    'linear-gradient(135deg, #1a1608 0%, #3a3010 100%)',
-    'linear-gradient(135deg, #081a10 0%, #0a4020 100%)',
-    'linear-gradient(135deg, #180812 0%, #400820 100%)',
-  ][i],
-}))
+// Paste your Cloudinary image links into the "src" properties below!
+const PHOTOS = [
+  { id: 0, label: "Moment 01", tag: "// photo_01.jpg", src: "https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600964/5d6a09b0-524b-4b50-99e7-fe3ee6f1e61a_efc8y3.jpg", gradient: 'linear-gradient(135deg, #1a1230 0%, #2d1f5e 100%)' },
+  { id: 1, label: "Moment 02", tag: "// photo_02.jpg", src: "https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600963/3ac77b49-d87f-4596-a647-1bd9d8cc6e03_gf965b.jpg", gradient: 'linear-gradient(135deg, #120a1a 0%, #3d1254 100%)' },
+  { id: 2, label: "Moment 03", tag: "// photo_03.jpg", src: "https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600964/5d8404d5-a939-4990-bdc5-01288ce35c84_gngtm1.jpg", gradient: 'linear-gradient(135deg, #0a1420 0%, #1a3a6e 100%)' },
+  { id: 3, label: "Moment 04", tag: "// photo_04.jpg", src: "https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600964/7c1b88a6-dcbe-4fcc-9033-f4fc72429a84_p4uaek.jpg", gradient: 'linear-gradient(135deg, #1a120a 0%, #4a2e0a 100%)' },
+  { id: 4, label: "Moment 05", tag: "// photo_05.jpg", src: "https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600965/641bd7bb-d0cb-4597-a427-ebfb00965999_jpszo8.jpg", gradient: 'linear-gradient(135deg, #0a1a14 0%, #0a3d2a 100%)' },
+  { id: 5, label: "Moment 06", tag: "// photo_06.jpg", src: "https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600965/2728e168-6300-478a-8c09-70f3daceee5f_yb9xja.jpg", gradient: 'linear-gradient(135deg, #1a0a14 0%, #4a0a2a 100%)' },
+  { id: 6, label: "Moment 07", tag: "// photo_07.jpg", src: "https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600965/5535f7f4-c559-4e62-aa4a-616b3bbc13fa_qjoohp.jpg", gradient: 'linear-gradient(135deg, #101420 0%, #203060 100%)' },
+  { id: 7, label: "Moment 08", tag: "// photo_08.jpg", src: "https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600965/29786677-25a0-4c5a-85c3-71ee72e69d26_lxqfqn.jpg", gradient: 'linear-gradient(135deg, #1a1608 0%, #3a3010 100%)' },
+  { id: 8, label: "Moment 09", tag: "// photo_09.jpg", src: "https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600966/acbbb412-1e42-472c-b910-7dcd7b76c630_o1d9yg.jpg", gradient: 'linear-gradient(135deg, #081a10 0%, #0a4020 100%)' },
+  { id: 9, label: "Moment 10", tag: "// photo_10.jpg", src: "https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600966/d56a202d-0a69-4383-965d-8936af1f6fa5_fjan3p.jpg", gradient: 'linear-gradient(135deg, #180812 0%, #400820 100%)' },
+]
 
 const N = PHOTOS.length
 const CARD_W = 220
@@ -162,11 +158,21 @@ export default function PhotoCarousel() {
                   }}
                   onClick={(e) => !dragging && openFullscreen(i, e)}
                 >
-                  {/* Placeholder content */}
-                  <div className="PhotoCarousel-placeholder">
-                    <span className="PhotoCarousel-initials">KS</span>
-                    <span className="PhotoCarousel-imgHint">[ your photo ]</span>
-                  </div>
+                  {/* Photo or Placeholder */}
+                  {photo.src ? (
+                    <div style={{ flex: 1, position: 'relative' }}>
+                      <img
+                        src={photo.src}
+                        alt={photo.label}
+                        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="PhotoCarousel-placeholder">
+                      <span className="PhotoCarousel-initials">KS</span>
+                      <span className="PhotoCarousel-imgHint">[ your photo ]</span>
+                    </div>
+                  )}
                   <div className="PhotoCarousel-cardBottom">
                     <div className="PhotoCarousel-cardTag">{photo.tag}</div>
                     <div className="PhotoCarousel-cardLabel">{photo.label}</div>
@@ -250,10 +256,20 @@ export default function PhotoCarousel() {
               className="PhotoCarousel-modalPhoto"
               style={{ background: PHOTOS[fullscreen].gradient }}
             >
-              <div className="PhotoCarousel-placeholder PhotoCarousel-placeholderLarge">
-                <span className="PhotoCarousel-initialsLarge">KS</span>
-                <span className="PhotoCarousel-imgHint">[ replace with your photo ]</span>
-              </div>
+              {PHOTOS[fullscreen].src ? (
+                <div style={{ flex: 1, position: 'relative' }}>
+                  <img
+                    src={PHOTOS[fullscreen].src}
+                    alt={PHOTOS[fullscreen].label}
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}
+                  />
+                </div>
+              ) : (
+                <div className="PhotoCarousel-placeholder PhotoCarousel-placeholderLarge">
+                  <span className="PhotoCarousel-initialsLarge">KS</span>
+                  <span className="PhotoCarousel-imgHint">[ replace with your photo ]</span>
+                </div>
+              )}
               <div className="PhotoCarousel-modalMeta">
                 <div className="PhotoCarousel-modalTag">{PHOTOS[fullscreen].tag}</div>
                 <div className="PhotoCarousel-modalLabel">{PHOTOS[fullscreen].label}</div>
