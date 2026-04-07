@@ -41,22 +41,13 @@ export function useCursor() {
     // Initialize position and perfectly center anchor
     gsap.set([dot, ring], { autoAlpha: 0, xPercent: -50, yPercent: -50, x: -200, y: -200 })
 
-    // Using gsap.quickTo guarantees performance without requestAnimationFrame race conditions
-    const xDot = gsap.quickTo(dot, "x", { duration: 0.08, ease: "power2.out" })
-    const yDot = gsap.quickTo(dot, "y", { duration: 0.08, ease: "power2.out" })
-    
-    const xRing = gsap.quickTo(ring, "x", { duration: 0.3, ease: "power2.out" })
-    const yRing = gsap.quickTo(ring, "y", { duration: 0.3, ease: "power2.out" })
-
     const onMove = ({ clientX, clientY }) => {
       if (!visible) {
         gsap.to([dot, ring], { autoAlpha: 1, duration: 0.25 })
         visible = true
       }
-      xDot(clientX)
-      yDot(clientY)
-      xRing(clientX)
-      yRing(clientY)
+      gsap.to(dot, { x: clientX, y: clientY, duration: 0.08, ease: "power2.out" })
+      gsap.to(ring, { x: clientX, y: clientY, duration: 0.3, ease: "power2.out" })
     }
 
     const hide = () => visible && gsap.to([dot, ring], { autoAlpha: 0, duration: 0.2 })

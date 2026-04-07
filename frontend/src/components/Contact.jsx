@@ -105,8 +105,6 @@ export default function Contact() {
           </button>
         </form>
       </div>
-
-      {/* ── Right — info (no phone number) ── */}
       <div data-reveal>
         <div className="section-label" style={{ marginBottom: 24 }}>// contact.info</div>
 
@@ -129,8 +127,8 @@ export default function Contact() {
           {[
             { icon: '⌥', label: 'GitHub', href: 'https://github.com/KhushiShah-25' },
             { icon: 'in', label: 'LinkedIn', href: '#' },
-            { icon: 'ig', label: 'Instagram', href: '#' },
-            { icon: '🧩', label: 'LeetCode', href: '#' },
+            { icon: 'ig', label: 'Instagram', href: 'https://www.instagram.com/khushiii_shah_25' },
+            { icon: '🧩', label: 'LeetCode', href: 'https://leetcode.com/u/Khushi_Shah_25' },
           ].map(s => (
             <a key={s.label} href={s.href} className="Contact-social" title={s.label} target="_blank" rel="noopener noreferrer">
               {s.icon}
