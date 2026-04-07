@@ -44,12 +44,20 @@ stack:      ["HTML","CSS","JS","React","Node","Express","PostgreSQL"]`}
           ))}
         </div>
 
-        <div className="About-info">
-          <div className="About-row"><strong>email</strong><span style={{ color: 'var(--muted2)' }}>use the contact form below</span></div>
-          <div className="About-row"><strong>loc</strong><span>Greater Noida, Noida, UP</span></div>
-          <div className="About-row"><strong>status</strong><span style={{ color: 'var(--green)' }}>// available for opportunities</span></div>
+        <div className="About-info" style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '32px' }}>
+          <div className="About-row" style={{ display: 'flex', gap: '12px' }}>
+            <strong>email</strong>
+            <span style={{ color: 'var(--muted2)' }}>use the contact form below</span>
+          </div>
+          <div className="About-row" style={{ display: 'flex', gap: '12px' }}>
+            <strong>loc</strong>
+            <span style={{ color: 'var(--muted)' }}>Greater Noida, Noida, UP</span>
+          </div>
+          <div className="About-row" style={{ display: 'flex', gap: '12px' }}>
+            <strong>status</strong>
+            <span style={{ color: 'var(--green)' }}>// available for opportunities</span>
+          </div>
         </div>
-
         <a href="#contact" className="btn-primary">Let's Connect →</a>
       </div>
     </section>

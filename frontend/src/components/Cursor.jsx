@@ -13,7 +13,7 @@ export default function Cursor() {
         style={{
           width: 8, height: 8, background: 'var(--accent)', borderRadius: '50%',
           position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 999999,
-          marginLeft: -4, marginTop: -4, willChange: 'transform',
+          willChange: 'transform',
         }}
       />
       <div
@@ -22,7 +22,7 @@ export default function Cursor() {
         style={{
           width: 36, height: 36, border: '1.5px solid var(--accent)', borderRadius: '50%',
           position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 999998,
-          transition: 'width 0.28s ease, height 0.28s ease', willChange: 'transform',
+          willChange: 'transform',
         }}
       />
     </>

@@ -36,33 +36,28 @@ export function useCursor() {
     const ring = ringRef.current
     if (!dot || !ring) return
 
-    // ── State ──────────────────────────────────────────────────────────────
-    let mX = -200, mY = -200
-    let rX = -200, rY = -200
-    let rafId
     let visible = false
 
-    gsap.set([dot, ring], { autoAlpha: 0 })
+    // Initialize position and perfectly center anchor
+    gsap.set([dot, ring], { autoAlpha: 0, xPercent: -50, yPercent: -50, x: -200, y: -200 })
 
-    // ── Snappy follow for dot ──────────────────────────────────────────────
+    // Using gsap.quickTo guarantees performance without requestAnimationFrame race conditions
+    const xDot = gsap.quickTo(dot, "x", { duration: 0.08, ease: "power2.out" })
+    const yDot = gsap.quickTo(dot, "y", { duration: 0.08, ease: "power2.out" })
+    
+    const xRing = gsap.quickTo(ring, "x", { duration: 0.3, ease: "power2.out" })
+    const yRing = gsap.quickTo(ring, "y", { duration: 0.3, ease: "power2.out" })
+
     const onMove = ({ clientX, clientY }) => {
-      mX = clientX
-      mY = clientY
       if (!visible) {
         gsap.to([dot, ring], { autoAlpha: 1, duration: 0.25 })
         visible = true
       }
-      gsap.to(dot, { x: mX, y: mY, duration: 0.08, ease: 'power2.out' })
+      xDot(clientX)
+      yDot(clientY)
+      xRing(clientX)
+      yRing(clientY)
     }
-
-    // ── Smooth lag for ring ───────────────────────────────────────────────
-    const tickRing = () => {
-      rX += (mX - rX) * 0.1
-      rY += (mY - rY) * 0.1
-      if (ring) ring.style.transform = `translate(${rX - 18}px, ${rY - 18}px)`
-      rafId = requestAnimationFrame(tickRing)
-    }
-    rafId = requestAnimationFrame(tickRing)
 
     const hide = () => visible && gsap.to([dot, ring], { autoAlpha: 0, duration: 0.2 })
     const show = () => visible && gsap.to([dot, ring], { autoAlpha: 1, duration: 0.2 })
@@ -96,7 +91,6 @@ export function useCursor() {
 
     return () => {
       window.removeEventListener('resize', handleResize)
-      cancelAnimationFrame(rafId)
       observer.disconnect()
       document.removeEventListener('mousemove', onMove)
       document.removeEventListener('mouseleave', hide)
