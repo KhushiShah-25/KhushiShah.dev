@@ -15,17 +15,30 @@ export default function Contact() {
     e.preventDefault()
     setStatus('loading')
     try {
-      const { error } = await supabase.from('messages').insert([{
-        name: form.name,
-        email: form.email,
-        subject: form.subject || 'General enquiry',
-        message: form.message,
-      }])
-      if (error) throw error
+      if (supabase) {
+        // Supabase path
+        const { error } = await supabase.from('messages').insert([{
+          name: form.name,
+          email: form.email,
+          subject: form.subject || 'General enquiry',
+          message: form.message,
+        }])
+        if (error) throw error
+      } else {
+        // Express backend fallback
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        })
+        if (!res.ok) throw new Error('Server error')
+      }
+
       setStatus('success')
       setForm({ name: '', email: '', subject: '', message: '' })
       setTimeout(() => setStatus('idle'), 4000)
-    } catch {
+    } catch (err) {
+      console.error(err)
       setStatus('error')
       setTimeout(() => setStatus('idle'), 3000)
     }
