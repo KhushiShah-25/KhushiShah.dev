@@ -116,7 +116,7 @@ export default function Contact() {
           {[
             { icon: '⌥', label: 'GitHub', href: 'https://github.com/KhushiShah-25' },
             { icon: 'in', label: 'LinkedIn', href: '#' },
-            { icon: '𝕏', label: 'Twitter', href: '#' },
+            { icon: 'ig', label: 'Instagram', href: '#' },
             { icon: '🧩', label: 'LeetCode', href: '#' },
           ].map(s => (
             <a key={s.label} href={s.href} className="Contact-social" title={s.label} target="_blank" rel="noopener noreferrer">
