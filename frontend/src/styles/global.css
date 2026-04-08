@@ -1819,7 +1819,8 @@ section {
   }
 
   .Hero-tiltWrap {
-    transform: scale(0.7);
+    transform: scale(0.55);
+    transform-origin: center top;
   }
 
   .Hero-badge {

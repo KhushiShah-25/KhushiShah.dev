@@ -7,17 +7,38 @@ export default function About() {
 
   return (
     <section id="about" className="About-section" ref={ref}>
-      <div className="About-imgCol" data-reveal>
+      <div className="About-imgCol" data-reveal style={{ position: 'relative', height: '100%', minHeight: '340px', borderRadius: '24px', overflow: 'hidden' }}>
         <img
           src="https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600966/e96e9ba2-bc89-4a78-b667-cc75727b771c_npgrkb.jpg"
           alt="Khushi Shah"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', zIndex: 0 }}
         />
-        <div className="About-tag">
-          <div className="About-dot" />
+        <div className="About-tag" style={{
+          position: 'absolute',
+          bottom: '24px',
+          left: '24px',
+          background: 'rgba(8, 8, 16, 0.75)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(124, 109, 250, 0.25)',
+          padding: '14px 20px',
+          borderRadius: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '14px',
+          zIndex: 2,
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
+        }}>
+          <div className="About-dot" style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            background: 'var(--green)',
+            boxShadow: '0 0 12px var(--green)'
+          }} />
           <div>
-            <div className="About-tagText">Open to Opportunities</div>
-            <div className="About-tagSub">// Internships &amp; Projects</div>
+            <div className="About-tagText" style={{ fontFamily: "'Syne', sans-serif", fontSize: '14px', fontWeight: 700, color: '#fff' }}>Open to Opportunities</div>
+            <div className="About-tagSub" style={{ fontFamily: "'Fira Code', monospace", fontSize: '10px', color: 'var(--muted)', marginTop: '4px' }}>// Internships &amp; Projects</div>
           </div>
         </div>
       </div>
