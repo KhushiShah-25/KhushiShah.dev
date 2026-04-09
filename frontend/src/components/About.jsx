@@ -11,7 +11,7 @@ export default function About() {
         <img
           src="https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600966/e96e9ba2-bc89-4a78-b667-cc75727b771c_npgrkb.jpg"
           alt="Khushi Shah"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', zIndex: 0 }}
+          style={{ position: 'absolute', inset: 0, width: '50%', height: '50%', objectFit: 'cover', display: 'block', zIndex: 0 }}
         />
         <div className="About-tag" style={{
           position: 'absolute',
