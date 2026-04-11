@@ -25,11 +25,12 @@ export default function Hero() {
     return () => ctx.revert()
   }, [])
 
-  /* ── 3D cursor tilt ── */
+  /* ── 3D cursor tilt (desktop only) ── */
   useEffect(() => {
     const wrap = photoRef.current
     const zone = zoneRef.current
     if (!wrap || !zone) return
+    if (window.matchMedia('(max-width: 900px)').matches) return
     const MAX = 26
     let cx = 0, cy = 0, tx = 0, ty = 0, raf
 
@@ -59,65 +60,92 @@ export default function Hero() {
   }, [])
 
   return (
-    <section id="home" className={"Hero-hero"}>
+    <section id="home" className="Hero-hero" aria-label="Introduction">
       {/* R3F particle background */}
       <HeroScene />
 
       {/* Left content */}
-      <div className={"Hero-left"} ref={leftRef}>
-        <div className={"Hero-badge"} data-hero-item>
+      <div className="Hero-left" ref={leftRef}>
+        <div className="Hero-badge" data-hero-item>
           // available for opportunities
         </div>
-        <p className={"Hero-greeting"} data-hero-item>const dev = () =&gt; {'{'}</p>
-        <h1 className={"Hero-name"} data-hero-item>
+        <p className="Hero-greeting" data-hero-item>const dev = () =&gt; {'{'}</p>
+        <h1 className="Hero-name" data-hero-item>
           Khushi<br /><em>Shah</em>
         </h1>
-        <p className={"Hero-tagline"} data-hero-item>
+        <p className="Hero-tagline" data-hero-item>
           &ldquo;Making my place in the Future&rdquo;
         </p>
-        <p className={"Hero-sub"} data-hero-item>
+        <p className="Hero-sub" data-hero-item>
           Undergrad at <strong>Bennett University</strong> · Full Stack Developer
           building scalable web apps and solving complex problems with elegant code.
         </p>
 
         {/* Stack pills */}
-        <div className={"Hero-stack"} data-hero-item>
-          {STACK_CORE.map(s => <span key={s} className={"Hero-pill"}>{s}</span>)}
-          {STACK_SEC.map(s => <span key={s} className={`${"Hero-pill"} ${"Hero-secondary"}`}>{s}</span>)}
+        <div className="Hero-stack" data-hero-item>
+          {STACK_CORE.map(s => <span key={s} className="Hero-pill">{s}</span>)}
+          {STACK_SEC.map(s => <span key={s} className="Hero-pill Hero-secondary">{s}</span>)}
         </div>
 
-        <div className={"Hero-actions"} data-hero-item>
+        <div className="Hero-actions" data-hero-item>
           <a href="#projects" className="btn-primary">View Projects</a>
           <a href="#contact" className="btn-outline">Get In Touch</a>
         </div>
       </div>
 
-      {/* Right — 3D tilt photo */}
-      <div className={"Hero-right"} ref={zoneRef}>
-        <div className={"Hero-deco"} />
-        <div className={"Hero-tiltWrap"} ref={photoRef} style={{ transformStyle: 'preserve-3d' }}>
-          <div className={"Hero-frame"} style={{ overflow: 'hidden' }}>
+      {/* Right — 3D tilt photo + mobile card */}
+      <div className="Hero-right" ref={zoneRef}>
+        <div className="Hero-deco" aria-hidden="true" />
+        <div className="Hero-tiltWrap" ref={photoRef} style={{ transformStyle: 'preserve-3d' }}>
+          <div className="Hero-frame">
             <img
               src="https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600967/f7a3122d-4379-4751-b237-39ef1eed1b2d_jo7h66.jpg"
               alt="Khushi Shah"
+              width="340"
+              height="460"
               style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              fetchpriority="high"
             />
           </div>
-          <div className={"Hero-chip"} style={{ top: 64, right: -44 }}>React.js ⚛</div>
-          <div className={"Hero-chip"} style={{ bottom: 100, left: -52 }}>Node.js 🟢</div>
+          <div className="Hero-chip" style={{ top: 64, right: -44 }} aria-hidden="true">React.js ⚛</div>
+          <div className="Hero-chip" style={{ bottom: 100, left: -52 }} aria-hidden="true">Node.js 🟢</div>
+        </div>
+
+        {/* Mobile-only quick stats card — only visible on mobile */}
+        <div className="Hero-mobileCard" aria-hidden="true">
+          <div className="Hero-mobileCardRow">
+            <div className="Hero-mobileCardItem">
+              <span className="Hero-mobileNum">7+</span>
+              <span className="Hero-mobileLabel">Skills</span>
+            </div>
+            <div className="Hero-mobileCardDivider" />
+            <div className="Hero-mobileCardItem">
+              <span className="Hero-mobileNum">10+</span>
+              <span className="Hero-mobileLabel">Projects</span>
+            </div>
+            <div className="Hero-mobileCardDivider" />
+            <div className="Hero-mobileCardItem">
+              <span className="Hero-mobileNum">∞</span>
+              <span className="Hero-mobileLabel">Commits</span>
+            </div>
+          </div>
+          <div className="Hero-mobileCardStatus">
+            <span className="Hero-mobileDot" />
+            <span>Open to Internships &amp; Projects</span>
+          </div>
         </div>
       </div>
 
-      <div className="Hero-scroll">
+      <div className="Hero-scroll" aria-hidden="true">
         <span className="Hero-scrollText">Scroll to discover</span>
         <div className="Hero-scrollLine" />
       </div>
 
-      <div className={"Hero-stats"}>
+      <div className="Hero-stats" aria-hidden="true">
         {[['7+', 'Tech Skills'], ['10+', 'Projects'], ['3', 'Languages']].map(([n, l]) => (
-          <div key={l} className={"Hero-stat"}>
-            <div className={"Hero-statNum"}>{n}</div>
-            <div className={"Hero-statLabel"}>{l}</div>
+          <div key={l} className="Hero-stat">
+            <div className="Hero-statNum">{n}</div>
+            <div className="Hero-statLabel">{l}</div>
           </div>
         ))}
       </div>

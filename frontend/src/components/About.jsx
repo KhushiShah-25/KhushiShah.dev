@@ -7,42 +7,45 @@ export default function About() {
 
   return (
     <section id="about" className="About-section" ref={ref}>
-      <div className="About-imgCol" data-reveal style={{ position: 'relative', height: '100%', minHeight: '340px', borderRadius: '24px', overflow: 'hidden' }}>
-        <img
-          src="https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600966/e96e9ba2-bc89-4a78-b667-cc75727b771c_npgrkb.jpg"
-          alt="Khushi Shah"
-          style={{ position: 'absolute', inset: 0, width: '50%', height: '50%', objectFit: 'cover', display: 'block', zIndex: 0 }}
-        />
-        <div className="About-tag" style={{
-          position: 'absolute',
-          bottom: '24px',
-          left: '24px',
-          background: 'rgba(8, 8, 16, 0.75)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          border: '1px solid rgba(124, 109, 250, 0.25)',
-          padding: '14px 20px',
-          borderRadius: '16px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '14px',
-          zIndex: 2,
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
-        }}>
-          <div className="About-dot" style={{
-            width: '8px',
-            height: '8px',
-            borderRadius: '50%',
-            background: 'var(--green)',
-            boxShadow: '0 0 12px var(--green)'
-          }} />
+
+      {/* ── Left: Image column ── */}
+      <div className="About-imgCol" data-reveal>
+        {/* Decorative ring */}
+        <div className="About-ringDeco" aria-hidden="true" />
+
+        {/* Main photo */}
+        <div className="About-photoWrap">
+          <img
+            src="https://res.cloudinary.com/dm2jsrej1/image/upload/q_auto/f_auto/v1775600966/e96e9ba2-bc89-4a78-b667-cc75727b771c_npgrkb.jpg"
+            alt="Khushi Shah — Full Stack Developer at Bennett University"
+            className="About-photo"
+            loading="lazy"
+            width="400"
+            height="480"
+          />
+          {/* Gradient overlay at bottom */}
+          <div className="About-photoGrad" aria-hidden="true" />
+        </div>
+
+        {/* Floating name tag */}
+        <div className="About-nameTag" aria-label="Khushi Shah, Full Stack Developer">
+          <div className="About-nameTagDot" aria-hidden="true" />
           <div>
-            <div className="About-tagText" style={{ fontFamily: "'Syne', sans-serif", fontSize: '14px', fontWeight: 700, color: '#fff' }}>Open to Opportunities</div>
-            <div className="About-tagSub" style={{ fontFamily: "'Fira Code', monospace", fontSize: '10px', color: 'var(--muted)', marginTop: '4px' }}>// Internships &amp; Projects</div>
+            <div className="About-nameTagTitle">Khushi Shah</div>
+            <div className="About-nameTagSub">// Full Stack Developer</div>
           </div>
         </div>
+
+        {/* Floating skills badge */}
+        <div className="About-skillBadge" aria-hidden="true">
+          <span className="About-skillBadgeText">React · Node · PostgreSQL</span>
+        </div>
+
+        {/* Corner accent */}
+        <div className="About-cornerAccent" aria-hidden="true" />
       </div>
 
+      {/* ── Right: Content ── */}
       <div data-reveal>
         <div className="section-label">// about.me</div>
         <h2 className="section-title">Hi, I'm <em>Khushi</em></h2>
@@ -69,18 +72,18 @@ stack:      ["HTML","CSS","JS","React","Node","Express","PostgreSQL"]`}
           ))}
         </div>
 
-        <div className="About-info" style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '32px' }}>
-          <div className="About-row" style={{ display: 'flex', gap: '12px' }}>
-            <strong>email</strong>
-            <span style={{ color: 'var(--muted2)' }}>use the contact form below</span>
-          </div>
-          <div className="About-row" style={{ display: 'flex', gap: '12px' }}>
+        <div className="About-info">
+          <div className="About-row">
             <strong>loc</strong>
-            <span style={{ color: 'var(--muted)' }}>Greater Noida, Noida, UP</span>
+            <span>Greater Noida, Uttar Pradesh</span>
           </div>
-          <div className="About-row" style={{ display: 'flex', gap: '12px' }}>
+          <div className="About-row">
+            <strong>uni</strong>
+            <span>Bennett University</span>
+          </div>
+          <div className="About-row">
             <strong>status</strong>
-            <span style={{ color: 'var(--green)' }}>// available for opportunities</span>
+            <span className="About-statusGreen">// available for opportunities</span>
           </div>
         </div>
         <a href="#contact" className="btn-primary">Let's Connect →</a>

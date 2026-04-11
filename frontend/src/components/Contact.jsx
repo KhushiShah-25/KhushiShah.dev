@@ -38,7 +38,7 @@ export default function Contact() {
       setForm({ name: '', email: '', subject: '', message: '' })
       setTimeout(() => setStatus('idle'), 4000)
     } catch (err) {
-      console.error(err)
+      console.error('Contact form error:', err)
       setStatus('error')
       setTimeout(() => setStatus('idle'), 3000)
     }
@@ -54,27 +54,46 @@ export default function Contact() {
           Whether it's an internship, a project, or just a conversation about tech — I'm all ears.
         </p>
 
-        <form className="Contact-form" onSubmit={handleSubmit}>
+        <form className="Contact-form" onSubmit={handleSubmit} noValidate>
           <div className="Contact-row">
             <div className="Contact-group">
-              <label className="Contact-label">name</label>
+              <label htmlFor="contact-name" className="Contact-label">name</label>
               <input
-                name="name" value={form.name} onChange={handleChange}
-                className="form-input" placeholder="Your name" required
+                id="contact-name"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Your name"
+                required
+                autoComplete="name"
               />
             </div>
             <div className="Contact-group">
-              <label className="Contact-label">email</label>
+              <label htmlFor="contact-email" className="Contact-label">email</label>
               <input
-                name="email" type="email" value={form.email} onChange={handleChange}
-                className="form-input" placeholder="your@email.com" required
+                id="contact-email"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="your@email.com"
+                required
+                autoComplete="email"
               />
             </div>
           </div>
 
           <div className="Contact-group">
-            <label className="Contact-label">subject</label>
-            <select name="subject" value={form.subject} onChange={handleChange} className="form-select">
+            <label htmlFor="contact-subject" className="Contact-label">subject</label>
+            <select
+              id="contact-subject"
+              name="subject"
+              value={form.subject}
+              onChange={handleChange}
+              className="form-select"
+            >
               <option value="">Select a topic…</option>
               <option>Internship Opportunity</option>
               <option>Freelance Project</option>
@@ -84,12 +103,16 @@ export default function Contact() {
           </div>
 
           <div className="Contact-group">
-            <label className="Contact-label">message</label>
+            <label htmlFor="contact-message" className="Contact-label">message</label>
             <textarea
-              name="message" value={form.message} onChange={handleChange}
+              id="contact-message"
+              name="message"
+              value={form.message}
+              onChange={handleChange}
               className="form-input"
               style={{ minHeight: 120, resize: 'vertical' }}
-              placeholder="Tell me more…" required
+              placeholder="Tell me more…"
+              required
             />
           </div>
 
@@ -105,6 +128,8 @@ export default function Contact() {
           </button>
         </form>
       </div>
+
+      {/* ── Right — info ── */}
       <div data-reveal>
         <div className="section-label" style={{ marginBottom: 24 }}>// contact.info</div>
 
@@ -112,10 +137,10 @@ export default function Contact() {
           { icon: '📧', label: 'email', val: <span style={{ color: 'var(--muted2)', fontSize: 13 }}>Fill the form to reach me!</span> },
           { icon: '📍', label: 'location', val: 'Greater Noida, Noida, UP' },
           { icon: '🎓', label: 'university', val: 'Bennett University' },
-          { icon: '💼', label: 'status', val: <span style={{ color: 'var(--green)', fontSize: 13 }}>// Open to Internships & Projects</span> },
+          { icon: '💼', label: 'status', val: <span style={{ color: 'var(--green)', fontSize: 13 }}>// Open to Internships &amp; Projects</span> },
         ].map(({ icon, label, val }) => (
           <div key={label} className="Contact-detail">
-            <div className="Contact-detailIcon">{icon}</div>
+            <div className="Contact-detailIcon" aria-hidden="true">{icon}</div>
             <div>
               <div className="Contact-detailLabel">{label}</div>
               <div className="Contact-detailVal">{val}</div>
@@ -130,7 +155,14 @@ export default function Contact() {
             { icon: 'ig', label: 'Instagram', href: 'https://www.instagram.com/khushiii_shah_25' },
             { icon: '🧩', label: 'LeetCode', href: 'https://leetcode.com/u/Khushi_Shah_25' },
           ].map(s => (
-            <a key={s.label} href={s.href} className="Contact-social" title={s.label} target="_blank" rel="noopener noreferrer">
+            <a
+              key={s.label}
+              href={s.href}
+              className="Contact-social"
+              aria-label={s.label}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {s.icon}
             </a>
           ))}

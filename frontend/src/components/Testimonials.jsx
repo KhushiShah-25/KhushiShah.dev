@@ -14,11 +14,31 @@ export default function Testimonials() {
 
   useEffect(() => {
     async function fetchTestimonials() {
-      const { data, error } = await supabase
-        .from('testimonials')
-        .select('*')
-        .order('created_at', { ascending: false })
-      if (!error && data && data.length) setItems(data)
+      // Try Supabase first
+      if (supabase) {
+        try {
+          const { data, error } = await supabase
+            .from('testimonials')
+            .select('*')
+            .order('created_at', { ascending: false })
+          if (!error && data && data.length) {
+            setItems(data)
+            return
+          }
+        } catch (err) {
+          console.warn('Supabase testimonials fetch failed')
+        }
+      }
+      // Fallback to Express backend
+      try {
+        const res = await fetch('/api/testimonials')
+        if (res.ok) {
+          const data = await res.json()
+          if (data && data.length) setItems(data)
+        }
+      } catch (err) {
+        console.warn('Express backend unavailable, using fallback data')
+      }
     }
     fetchTestimonials()
   }, [])
@@ -34,10 +54,12 @@ export default function Testimonials() {
         <div className="Testimonials-main">
           {items.map(t => (
             <div key={t.id} className="Testimonials-card" data-reveal>
-              <div className="Testimonials-stars">{'★'.repeat(t.rating)}</div>
+              <div className="Testimonials-stars" aria-label={`${t.rating} out of 5 stars`}>
+                {'★'.repeat(t.rating)}
+              </div>
               <p className="Testimonials-body">"{t.body}"</p>
               <div className="Testimonials-author">
-                <div className="Testimonials-avatar">{t.initials}</div>
+                <div className="Testimonials-avatar" aria-hidden="true">{t.initials}</div>
                 <div>
                   <div className="Testimonials-name">{t.name}</div>
                   <div className="Testimonials-role">{t.role}</div>
@@ -48,7 +70,7 @@ export default function Testimonials() {
         </div>
 
         <div className="Testimonials-side">
-          <div className={`Testimonials-statCard Testimonials-accent`} data-reveal>
+          <div className="Testimonials-statCard Testimonials-accent" data-reveal>
             <div className="Testimonials-statNum">7+</div>
             <div className="Testimonials-statText">Technologies mastered</div>
           </div>

@@ -62,16 +62,24 @@ export default function Blog() {
   const containerRef = useRef(null)
   useScrollReveal(containerRef)
   const [posts, setPosts] = useState(FALLBACK_POSTS)
+  const [openId, setOpenId] = useState(1) // first item open by default
 
   useEffect(() => {
     if (!supabase) return
     async function fetchPosts() {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('published', true)
-        .order('created_at', { ascending: true })
-      if (!error && data && data.length > 0) setPosts(data)
+      try {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('published', true)
+          .order('created_at', { ascending: true })
+        if (!error && data && data.length > 0) {
+          setPosts(data)
+          setOpenId(data[0].id)
+        }
+      } catch (err) {
+        console.warn('Blog fetch failed, using fallback')
+      }
     }
     fetchPosts()
   }, [])
@@ -88,33 +96,56 @@ export default function Blog() {
             "I didn't just want a portfolio — I wanted a project that would push me to learn something new at every step."
           </blockquote>
           <p className="section-desc">
-            Behind-the-scenes breakdown of how I designed and built this portfolio from scratch —
-            every decision, every bug, every "a-ha" moment. No templates. No page builders. Just code.
+            Behind-the-scenes breakdown of how I designed and built this portfolio —
+            every decision, every bug, every "a-ha" moment. No templates. Just code.
           </p>
         </div>
       </div>
 
-      <div className="Blog-timeline">
-        {posts.map((step) => (
-          <div key={step.id} className="Blog-step" data-reveal>
-            <div className="Blog-dot">{step.emoji}</div>
-            <div className="Blog-content">
-              {step.phase && <div className="Blog-phase">{step.phase}</div>}
-              <h3 className="Blog-stepTitle">{step.title}</h3>
-              <p className="Blog-body">{step.body}</p>
-              {step.code && (
-                <pre className="Blog-code"><code>{step.code}</code></pre>
-              )}
-              {step.stack && step.stack.length > 0 && (
-                <div className="Blog-stepStack">
-                  {step.stack.map(t => (
-                    <span key={t} className="Blog-stepTag">{t}</span>
-                  ))}
+      {/* ── FAQ-style accordion ── */}
+      <div className="Blog-accordion" data-reveal>
+        {posts.map((step) => {
+          const isOpen = openId === step.id
+          return (
+            <div
+              key={step.id}
+              className={`Blog-accItem ${isOpen ? 'Blog-accOpen' : ''}`}
+            >
+              <button
+                className="Blog-accHeader"
+                onClick={() => setOpenId(isOpen ? null : step.id)}
+                aria-expanded={isOpen}
+              >
+                <div className="Blog-accLeft">
+                  <span className="Blog-accEmoji" aria-hidden="true">{step.emoji}</span>
+                  <div>
+                    {step.phase && <div className="Blog-accPhase">{step.phase}</div>}
+                    <div className="Blog-accTitle">{step.title}</div>
+                  </div>
                 </div>
-              )}
+                <div className="Blog-accIcon" aria-hidden="true">
+                  {isOpen ? '−' : '+'}
+                </div>
+              </button>
+
+              <div className="Blog-accBody">
+                <div className="Blog-accBodyInner">
+                  <p className="Blog-body">{step.body}</p>
+                  {step.code && (
+                    <pre className="Blog-code"><code>{step.code}</code></pre>
+                  )}
+                  {step.stack && step.stack.length > 0 && (
+                    <div className="Blog-stepStack">
+                      {step.stack.map(t => (
+                        <span key={t} className="Blog-stepTag">{t}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       <div className="Blog-lessons" data-reveal>
@@ -122,7 +153,7 @@ export default function Blog() {
         <div className="Blog-lessonsGrid">
           {LESSONS.map((l, i) => (
             <div key={i} className="Blog-lesson">
-              <span className="Blog-lessonBullet">✦</span>
+              <span className="Blog-lessonBullet" aria-hidden="true">✦</span>
               {l}
             </div>
           ))}
