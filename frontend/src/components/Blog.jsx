@@ -56,6 +56,24 @@ const FALLBACK_POSTS = [
     body: 'Frontend deployed on Vercel with a single vercel.json rewrite rule. Backend lives on Railway with a free PostgreSQL instance. Total monthly cost: $0.',
     stack: ['Vercel', 'Railway', 'CI/CD'],
   },
+  {
+    id: 6,
+    emoji: '🌐',
+    phase: '// phase_06',
+    title: 'React Three Fiber (3D)',
+    body: 'Added a particle background in the hero using React Three Fiber and a revolving 3D photo carousel in the gallery. R3F lets you write Three.js scenes as React components — the mental model clicked immediately.',
+    code: `// Cylinder carousel — each card placed at angle i * (360 / N)\nconst x = Math.sin(rad) * RADIUS\nconst z = Math.cos(rad) * RADIUS\n// Scale by depth so far cards shrink naturally\nconst scale = (z + RADIUS) / (2 * RADIUS)`,
+    stack: ['React Three Fiber', 'Three.js', 'WebGL'],
+  },
+  {
+    id: 7,
+    emoji: '🛡️',
+    phase: '// phase_07',
+    title: 'Supabase Integration',
+    body: 'Swapped the Express backend for Supabase to get a zero-config hosted Postgres with Row Level Security. The anon key is safe in the browser because RLS policies only allow SELECT on public tables and INSERT on messages — no reads on messages ever.',
+    code: `// supabase.js — graceful null if env vars missing\nexport const supabase = (url && key)\n  ? createClient(url, key)\n  : null   // components handle null path`,
+    stack: ['Supabase', 'Row Level Security', 'PostgreSQL'],
+  },
 ]
 
 export default function Blog() {
