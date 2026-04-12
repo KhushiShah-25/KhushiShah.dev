@@ -11,44 +11,49 @@ const FALLBACK = [
   { id: 4, title: 'DSA Visualizer', description: 'Interactive visualizer for data structures and sorting algorithms built while learning C++ DSA.', category: 'Algorithm', stack: ['JavaScript', 'HTML', 'CSS', 'C++'], emoji: '📊', featured: true, live_url: null, repo_url: null },
 ]
 
+async function fetchProjectsFromAPI() {
+  // 1. Try Supabase
+  if (supabase) {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .order('created_at', { ascending: false })
+    if (!error && data && data.length) return data
+    if (error) console.warn('Supabase projects error:', error.message)
+  }
+  // 2. Try Express backend (local dev)
+  try {
+    const res = await fetch('/api/projects', { signal: AbortSignal.timeout(3000) })
+    if (res.ok) {
+      const data = await res.json()
+      if (data && data.length) return data
+    }
+  } catch { /* silent */ }
+  return null
+}
+
 export default function Projects() {
   const ref = useRef(null)
   useScrollReveal(ref)
   const [allProjects, setAllProjects] = useState(FALLBACK)
   const [filter, setFilter] = useState('All')
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function fetchProjects() {
-      // Try Supabase first
-      if (supabase) {
-        try {
-          const { data, error } = await supabase
-            .from('projects')
-            .select('*')
-            .order('created_at', { ascending: false })
-          if (!error && data && data.length) {
-            setAllProjects(data)
-            setLoading(false)
-            return
-          }
-        } catch (err) {
-          console.warn('Supabase fetch failed, trying Express backend:', err)
-        }
-      }
-      // Fallback to Express backend
-      try {
-        const res = await fetch('/api/projects')
-        if (res.ok) {
-          const data = await res.json()
-          if (data && data.length) setAllProjects(data)
-        }
-      } catch (err) {
-        console.warn('Express backend unavailable, using fallback data')
-      }
-      setLoading(false)
-    }
-    fetchProjects()
+    fetchProjectsFromAPI().then(data => {
+      if (data) setAllProjects(data)
+    })
+
+    // Real-time updates via Supabase subscription
+    if (!supabase) return
+    const channel = supabase
+      .channel('projects-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => {
+        // Re-fetch when any row changes
+        fetchProjectsFromAPI().then(data => { if (data) setAllProjects(data) })
+      })
+      .subscribe()
+
+    return () => supabase.removeChannel(channel)
   }, [])
 
   const displayed = filter === 'All'
@@ -67,7 +72,6 @@ export default function Projects() {
         </p>
       </div>
 
-      {/* ── Category filter tabs ── */}
       <div className="Projects-filters" data-reveal>
         {CATEGORIES.map(cat => (
           <button
@@ -88,37 +92,33 @@ export default function Projects() {
 
       <div className="Projects-grid">
         {displayed.map((p, i) => {
-          const CardWrapper = p.live_url ? 'a' : 'div'
-          const cardProps = p.live_url
+          const hasLink = p.live_url && p.live_url.trim() !== ''
+          const CardEl = hasLink ? 'a' : 'div'
+          const cardProps = hasLink
             ? { href: p.live_url, target: '_blank', rel: 'noopener noreferrer' }
             : {}
 
           return (
-            <CardWrapper
+            <CardEl
               key={p.id}
               className="Projects-card"
               data-reveal
               {...cardProps}
             >
-              {/* ── Project image / emoji ── */}
               <div className={`Projects-img Projects-bg${(i % 4) + 1}`}>
                 {p.photo_src
-                  ? <img
-                    src={p.photo_src}
-                    alt={p.title}
-                    loading="lazy"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
+                  ? <img src={p.photo_src} alt={p.title} loading="lazy"
+                    width="440" height="220"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   : <span className="Projects-imgIcon" aria-hidden="true">{p.emoji}</span>
                 }
-                {p.live_url && (
+                {hasLink && (
                   <div className="Projects-overlay">
                     <span className="Projects-viewBtn">View Project</span>
                   </div>
                 )}
               </div>
 
-              {/* ── Card body ── */}
               <div className="Projects-body">
                 <div className="Projects-tag">{p.category}</div>
                 <div className="Projects-title">{p.title}</div>
@@ -129,31 +129,23 @@ export default function Projects() {
                   ))}
                 </div>
                 <div className="Projects-links">
-                  {p.repo_url && (
-                    <a
-                      href={p.repo_url}
-                      onClick={e => e.stopPropagation()}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="Projects-repoLink"
-                    >
+                  {p.repo_url && p.repo_url.trim() && (
+                    <a href={p.repo_url} onClick={e => e.stopPropagation()}
+                      target="_blank" rel="noopener noreferrer"
+                      className="Projects-repoLink">
                       ⌥ Source Code
                     </a>
                   )}
-                  {p.live_url && (
-                    <a
-                      href={p.live_url}
-                      onClick={e => e.stopPropagation()}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="Projects-liveLink"
-                    >
+                  {hasLink && (
+                    <a href={p.live_url} onClick={e => e.stopPropagation()}
+                      target="_blank" rel="noopener noreferrer"
+                      className="Projects-liveLink">
                       ↗ Live Demo
                     </a>
                   )}
                 </div>
               </div>
-            </CardWrapper>
+            </CardEl>
           )
         })}
       </div>
