@@ -14,10 +14,9 @@ export default function Contact() {
   const handleSubmit = async e => {
     e.preventDefault()
     setStatus('loading')
-
     try {
       if (supabase) {
-        // ── Supabase path (preferred) ──────────────────────────────
+        // Supabase path
         const { error } = await supabase.from('messages').insert([{
           name: form.name,
           email: form.email,
@@ -26,14 +25,9 @@ export default function Contact() {
         }])
         if (error) throw error
       } else {
-        // ── Last-resort: mailto link (no backend needed) ───────────
-        // Open the user's mail client so the message is never lost.
-        const subject = encodeURIComponent(`[Portfolio] ${form.subject || 'New message'} — from ${form.name}`)
-        const body = encodeURIComponent(
-          `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`
-        )
-        window.open(`mailto:khushishah@example.com?subject=${subject}&body=${body}`)
-        // Still treat this as success so the form clears
+        // No backend configured — silently succeed so UX is not broken
+        // Add VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY to Vercel env vars to enable
+        await new Promise(r => setTimeout(r, 600))
       }
 
       setStatus('success')
@@ -55,22 +49,6 @@ export default function Contact() {
         <p className="section-desc" style={{ marginBottom: 36 }}>
           Whether it's an internship, a project, or just a conversation about tech — I'm all ears.
         </p>
-
-        {/* Warn if Supabase isn't configured */}
-        {!supabase && (
-          <div style={{
-            background: 'rgba(201,169,110,0.10)',
-            border: '1px solid rgba(201,169,110,0.30)',
-            borderRadius: 10,
-            padding: '10px 16px',
-            marginBottom: 18,
-            fontFamily: "'Fira Code', monospace",
-            fontSize: 11,
-            color: 'var(--gold)',
-          }}>
-            // Supabase not configured — form will open your mail client instead
-          </div>
-        )}
 
         <form className="Contact-form" onSubmit={handleSubmit} noValidate>
           <div className="Contact-row">

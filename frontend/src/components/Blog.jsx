@@ -62,7 +62,7 @@ const FALLBACK_POSTS = [
     phase: '// phase_06',
     title: 'React Three Fiber (3D)',
     body: 'Added a particle background in the hero using React Three Fiber and a revolving 3D photo carousel in the gallery. R3F lets you write Three.js scenes as React components — the mental model clicked immediately.',
-    code: `// Cylinder carousel — each card placed at angle i * (360 / N)\nconst x = Math.sin(rad) * RADIUS\nconst z = Math.cos(rad) * RADIUS\n// Scale by depth so far cards shrink naturally\nconst scale = (z + RADIUS) / (2 * RADIUS)`,
+    code: `// Cylinder carousel — each card placed at angle i * (360 / N)\nconst x = Math.sin(rad) * RADIUS\nconst z = Math.cos(rad) * RADIUS\nconst scale = (z + RADIUS) / (2 * RADIUS)`,
     stack: ['React Three Fiber', 'Three.js', 'WebGL'],
   },
   {
@@ -70,7 +70,7 @@ const FALLBACK_POSTS = [
     emoji: '🛡️',
     phase: '// phase_07',
     title: 'Supabase Integration',
-    body: 'Swapped the Express backend for Supabase to get a zero-config hosted Postgres with Row Level Security. The anon key is safe in the browser because RLS policies only allow SELECT on public tables and INSERT on messages — no reads on messages ever.',
+    body: 'Swapped the Express backend for Supabase to get zero-config hosted Postgres with Row Level Security. The anon key is safe in the browser because RLS policies only allow SELECT on public tables and INSERT on messages — no reads on messages ever.',
     code: `// supabase.js — graceful null if env vars missing\nexport const supabase = (url && key)\n  ? createClient(url, key)\n  : null   // components handle null path`,
     stack: ['Supabase', 'Row Level Security', 'PostgreSQL'],
   },
