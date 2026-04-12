@@ -7,42 +7,66 @@ export default function Contact() {
   useScrollReveal(ref)
 
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
-  const [status, setStatus] = useState('idle') // idle | loading | success | error
+  const [status, setStatus] = useState('idle')
+  const [errorMsg, setErrorMsg] = useState('')
 
   const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
   const handleSubmit = async e => {
     e.preventDefault()
+    setErrorMsg('')
+
+    // ── DIAGNOSTIC BLOCK — open DevTools > Console ──
+    console.group('📬 Contact Form Submit')
+    console.log('supabase client:', supabase ? '✅ initialized' : '❌ null — env vars missing or wrong')
+    console.log('VITE_SUPABASE_URL:', import.meta.env.VITE_SUPABASE_URL ?? '⚠️ undefined')
+    console.log('VITE_SUPABASE_ANON_KEY:', import.meta.env.VITE_SUPABASE_ANON_KEY ? '✅ present' : '⚠️ undefined')
+    console.log('payload:', { name: form.name, email: form.email, subject: form.subject, message: form.message })
+    console.groupEnd()
+
+    if (!supabase) {
+      setErrorMsg('Supabase not initialised — VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY is missing. Add them in Vercel → Settings → Environment Variables, then redeploy.')
+      setStatus('error')
+      return
+    }
+
     setStatus('loading')
+
     try {
-      if (supabase) {
-        // Supabase path
-        const { error } = await supabase.from('messages').insert([{
+      const { data, error, status: httpStatus, statusText } = await supabase
+        .from('messages')
+        .insert([{
           name: form.name,
           email: form.email,
           subject: form.subject || 'General enquiry',
           message: form.message,
         }])
-        if (error) throw error
-      } else {
-        // No backend configured — silently succeed so UX is not broken
-        // Add VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY to Vercel env vars to enable
-        await new Promise(r => setTimeout(r, 600))
-      }
+        .select()
+
+      console.group('📡 Supabase response')
+      console.log('HTTP status:', httpStatus, statusText)
+      console.log('data:', data)
+      console.log('error:', error)
+      console.groupEnd()
+
+      if (error) throw error
 
       setStatus('success')
       setForm({ name: '', email: '', subject: '', message: '' })
       setTimeout(() => setStatus('idle'), 4000)
+
     } catch (err) {
-      console.error('Contact form error:', err)
+      console.error('❌ Insert failed:', err)
+      const msg = err?.message || err?.details || JSON.stringify(err)
+      setErrorMsg(`Supabase error: ${msg}`)
       setStatus('error')
-      setTimeout(() => setStatus('idle'), 3000)
+      setTimeout(() => { setStatus('idle'); setErrorMsg('') }, 8000)
     }
   }
 
   return (
     <section id="contact" className="Contact-section" ref={ref}>
-      {/* ── Left — form ── */}
+
       <div data-reveal>
         <div className="section-label">// contact.init()</div>
         <h2 className="section-title">Let's Build<br /><em>Together</em></h2>
@@ -50,46 +74,42 @@ export default function Contact() {
           Whether it's an internship, a project, or just a conversation about tech — I'm all ears.
         </p>
 
+        {/* Live connection status pill */}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          fontFamily: "'Fira Code', monospace", fontSize: 10,
+          color: supabase ? 'var(--green)' : '#f87171',
+          background: supabase ? 'rgba(74,222,128,0.08)' : 'rgba(239,68,68,0.08)',
+          border: `1px solid ${supabase ? 'rgba(74,222,128,0.25)' : 'rgba(239,68,68,0.25)'}`,
+          borderRadius: 100, padding: '4px 12px', marginBottom: 20,
+        }}>
+          <span style={{
+            width: 6, height: 6, borderRadius: '50%',
+            background: supabase ? 'var(--green)' : '#f87171', flexShrink: 0,
+          }} />
+          {supabase ? '// supabase connected' : '// supabase: env vars missing'}
+        </div>
+
         <form className="Contact-form" onSubmit={handleSubmit} noValidate>
           <div className="Contact-row">
             <div className="Contact-group">
               <label htmlFor="contact-name" className="Contact-label">name</label>
-              <input
-                id="contact-name"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="Your name"
-                required
-                autoComplete="name"
-              />
+              <input id="contact-name" name="name" value={form.name}
+                onChange={handleChange} className="form-input"
+                placeholder="Your name" required autoComplete="name" />
             </div>
             <div className="Contact-group">
               <label htmlFor="contact-email" className="Contact-label">email</label>
-              <input
-                id="contact-email"
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="your@email.com"
-                required
-                autoComplete="email"
-              />
+              <input id="contact-email" name="email" type="email" value={form.email}
+                onChange={handleChange} className="form-input"
+                placeholder="your@email.com" required autoComplete="email" />
             </div>
           </div>
 
           <div className="Contact-group">
             <label htmlFor="contact-subject" className="Contact-label">subject</label>
-            <select
-              id="contact-subject"
-              name="subject"
-              value={form.subject}
-              onChange={handleChange}
-              className="form-select"
-            >
+            <select id="contact-subject" name="subject" value={form.subject}
+              onChange={handleChange} className="form-select">
               <option value="">Select a topic…</option>
               <option>Internship Opportunity</option>
               <option>Freelance Project</option>
@@ -100,26 +120,30 @@ export default function Contact() {
 
           <div className="Contact-group">
             <label htmlFor="contact-message" className="Contact-label">message</label>
-            <textarea
-              id="contact-message"
-              name="message"
-              value={form.message}
-              onChange={handleChange}
-              className="form-input"
+            <textarea id="contact-message" name="message" value={form.message}
+              onChange={handleChange} className="form-input"
               style={{ minHeight: 120, resize: 'vertical' }}
-              placeholder="Tell me more…"
-              required
-            />
+              placeholder="Tell me more…" required />
           </div>
 
-          <button
-            type="submit"
-            disabled={status === 'loading'}
-            className={`btn-primary Contact-submit ${status === 'success' ? 'Contact-success' : ''}`}
-          >
+          {status === 'error' && errorMsg && (
+            <div style={{
+              background: 'rgba(239,68,68,0.1)',
+              border: '1px solid rgba(239,68,68,0.35)',
+              borderRadius: 10, padding: '12px 16px',
+              fontFamily: "'Fira Code', monospace",
+              fontSize: 11, color: '#f87171', lineHeight: 1.7,
+              wordBreak: 'break-word',
+            }}>
+              ✗ {errorMsg}
+            </div>
+          )}
+
+          <button type="submit" disabled={status === 'loading'}
+            className={`btn-primary Contact-submit ${status === 'success' ? 'Contact-success' : ''}`}>
             {status === 'loading' ? 'Sending…'
               : status === 'success' ? '✓ Message Sent!'
-                : status === 'error' ? '✗ Try again'
+                : status === 'error' ? '✗ Failed — see error above'
                   : 'Send Message →'}
           </button>
         </form>
@@ -151,14 +175,8 @@ export default function Contact() {
             { icon: 'ig', label: 'Instagram', href: 'https://www.instagram.com/khushiii_shah_25' },
             { icon: '🧩', label: 'LeetCode', href: 'https://leetcode.com/u/Khushi_Shah_25' },
           ].map(s => (
-            <a
-              key={s.label}
-              href={s.href}
-              className="Contact-social"
-              aria-label={s.label}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a key={s.label} href={s.href} className="Contact-social"
+              aria-label={s.label} target="_blank" rel="noopener noreferrer">
               {s.icon}
             </a>
           ))}
