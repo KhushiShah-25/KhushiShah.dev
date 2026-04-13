@@ -16,16 +16,8 @@ export default function Contact() {
     e.preventDefault()
     setErrorMsg('')
 
-    // ── DIAGNOSTIC BLOCK — open DevTools > Console ──
-    console.group('📬 Contact Form Submit')
-    console.log('supabase client:', supabase ? '✅ initialized' : '❌ null — env vars missing or wrong')
-    console.log('VITE_SUPABASE_URL:', import.meta.env.VITE_SUPABASE_URL ?? '⚠️ undefined')
-    console.log('VITE_SUPABASE_ANON_KEY:', import.meta.env.VITE_SUPABASE_ANON_KEY ? '✅ present' : '⚠️ undefined')
-    console.log('payload:', { name: form.name, email: form.email, subject: form.subject, message: form.message })
-    console.groupEnd()
-
     if (!supabase) {
-      setErrorMsg('Supabase not initialised — VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY is missing. Add them in Vercel → Settings → Environment Variables, then redeploy.')
+      setErrorMsg('Supabase not configured — contact form unavailable. Please reach out via LinkedIn or GitHub.')
       setStatus('error')
       return
     }
@@ -33,7 +25,10 @@ export default function Contact() {
     setStatus('loading')
 
     try {
-      const { data, error, status: httpStatus, statusText } = await supabase
+      // NOTE: .select() is intentionally NOT chained here.
+      // The RLS policy on `messages` allows INSERT but NOT SELECT (by design —
+      // no one should be able to read submitted contact messages via the anon key).
+      const { error } = await supabase
         .from('messages')
         .insert([{
           name: form.name,
@@ -41,13 +36,6 @@ export default function Contact() {
           subject: form.subject || 'General enquiry',
           message: form.message,
         }])
-        .select()
-
-      console.group('📡 Supabase response')
-      console.log('HTTP status:', httpStatus, statusText)
-      console.log('data:', data)
-      console.log('error:', error)
-      console.groupEnd()
 
       if (error) throw error
 
@@ -56,9 +44,9 @@ export default function Contact() {
       setTimeout(() => setStatus('idle'), 4000)
 
     } catch (err) {
-      console.error('❌ Insert failed:', err)
+      console.error('❌ Contact insert failed:', err)
       const msg = err?.message || err?.details || JSON.stringify(err)
-      setErrorMsg(`Supabase error: ${msg}`)
+      setErrorMsg(`Error: ${msg}`)
       setStatus('error')
       setTimeout(() => { setStatus('idle'); setErrorMsg('') }, 8000)
     }
